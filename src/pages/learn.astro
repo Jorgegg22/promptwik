@@ -1,0 +1,318 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Footer from "../layouts/Footer.astro";
+
+const techniques = [
+  {
+    id: "zero-shot",
+    title: "Zero-Shot Prompting",
+    level: "Foundational",
+    desc: "Direct instruction to the AI without prior examples. Leverages the inherent ability of modern LLMs to infer tasks from pre-training.",
+    example: "Classify this text as 'Positive' or 'Negative': 'Customer service was exceptional today.'",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "few-shot",
+    title: "Few-Shot Prompting",
+    level: "Advanced",
+    desc: "Injecting 1 to 5 examples of input/output pairs into the context. Highly effective for teaching the AI specific structures and brand tones.",
+    example: "Input: Apple -> Fruit \nInput: Dog -> Animal \nInput: Chair ->",
+    color: "bg-button-purple"
+  },
+  {
+    id: "cot",
+    title: "Chain of Thought (CoT)",
+    level: "Elite",
+    desc: "Forces the model to break down its reasoning step-by-step before answering. Dramatically increases success in math, logic, and planning.",
+    example: "Think step-by-step: first calculate the fixed cost, then the variable, and finally the net margin.",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "auto-consistency",
+    title: "Self-Consistency",
+    level: "Elite",
+    desc: "Samples multiple CoT reasoning paths and selects the most frequent answer to overcome isolated AI logic errors.",
+    example: "Generate 3 different ways to solve this problem and return the solution where at least two paths agree.",
+    color: "bg-button-purple"
+  },
+  {
+    id: "generated-knowledge",
+    title: "Generated Knowledge Prompting",
+    level: "Elite",
+    desc: "Instructs the AI to first generate relevant facts or information about a topic before attempting to answer the core question.",
+    example: "List 4 key facts about the French Revolution. Based on those facts, what was its long-term economic impact?",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "prompt-chaining",
+    title: "Prompt Chaining",
+    level: "Advanced",
+    desc: "Splitting complex workflows into multiple sequential prompts, where the output of the first prompt serves as the input for the next.",
+    example: "[Prompt 1: Extract names] -> [Prompt 2: Find job titles for these names]",
+    color: "bg-button-purple"
+  },
+  {
+    id: "tree-of-thoughts",
+    title: "Tree of Thoughts (ToT)",
+    level: "Master",
+    desc: "A logical tree structure where the AI explores multiple reasoning branches, evaluates them, and backtracks from incorrect options.",
+    example: "Imagine 3 experts debating this problem. Each takes a step, evaluates progress, and restarts if a dead-end is reached.",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "rag",
+    title: "Retrieval Augmented Generation",
+    level: "Master",
+    desc: "Connects the prompt to a vector database to retrieve real-time data, virtually eliminating hallucinations in production environments.",
+    example: "Based STRICTLY on the [ATTACHED_JSON], extract the 2025 revenue figures.",
+    color: "bg-button-purple"
+  },
+  {
+    id: "art",
+    title: "Automatic Reasoning & Tool-use",
+    level: "Master",
+    desc: "Allows the AI to pause text generation, execute an external tool (like an API or calculator), and resume with the result.",
+    example: "Calculate the square root of 14598 [TOOL_CALL: CALCULATOR] and use the result to...",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "ape",
+    title: "Automatic Prompt Engineer",
+    level: "Master",
+    desc: "Using LLMs to generate, evaluate, and optimize the most effective instructions for a given task autonomously.",
+    example: "Act as a prompt engineer. Improve this instruction so Claude 4 avoids logical fallacies in the response.",
+    color: "bg-button-purple"
+  },
+  {
+    id: "active-prompting",
+    title: "Active Prompting",
+    level: "Master",
+    desc: "A method to identify questions where the model has the highest uncertainty and request human annotation before proceeding.",
+    example: "Evaluate these 10 cases. Return only the 2 cases where your confidence score is below 80%.",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "directional-stimulus",
+    title: "Directional Stimulus",
+    level: "Elite",
+    desc: "Providing a specific 'hint' or keyword (stimulus) within the prompt to strongly guide the model's semantic direction.",
+    example: "Summarize the article. Directional hints to include: 'Inflation', '2026 Housing Crisis'.",
+    color: "bg-button-purple"
+  },
+  {
+    id: "pal",
+    title: "Program-Aided Language Models",
+    level: "Master",
+    desc: "The AI reads the problem and writes a Python script (or other language) to solve it via code execution rather than linguistic inference.",
+    example: "Write a Python script that takes these dates and calculates the exact difference in business days.",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "react",
+    title: "ReAct (Reason + Act)",
+    level: "Master",
+    desc: "Combines verbal reasoning with environmental actions. The core foundation for modern Autonomous AI Agents.",
+    example: "Thought: I need to check the weather. Action: Search[Weather Madrid]. Observation: Sunny. Response...",
+    color: "bg-button-purple"
+  },
+  {
+    id: "reflexion",
+    title: "Reflexion",
+    level: "Master",
+    desc: "The AI agent receives feedback on its previous attempt, 'reflects' on the failure, and retries the task with improved logic.",
+    example: "Your previous code failed with a TypeError. Analyze the traceback and rewrite the entire function.",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "cot-multimodal",
+    title: "Multimodal CoT",
+    level: "Elite",
+    desc: "Applies Chain of Thought by jointly analyzing text inputs and visual elements (images) step-by-step.",
+    example: "Observe the attached diagram. Step 1: Identify the red node. Step 2: Trace its connection. Conclusion:",
+    color: "bg-button-purple"
+  },
+  {
+    id: "graph-prompting",
+    title: "Graph Prompting",
+    level: "Master",
+    desc: "Representing context in graph format (nodes and edges) to help the LLM understand complex multidimensional relationships.",
+    example: "Entity A: John. Relation: Manager of. Entity B: Peter. Map the hierarchical structure.",
+    color: "bg-basement-orange"
+  },
+  {
+    id: "meta-prompting",
+    title: "Meta-prompting",
+    level: "Master",
+    desc: "Instructions that tell the model to act as an orchestrator, directing other model instances to solve specific sub-modules.",
+    example: "You are the Orchestrator Agent. Break this software project into 3 tasks and assign a specific prompt to each sub-agent.",
+    color: "bg-button-purple"
+  }
+];
+---
+
+<Layout title="Prompt Engineering Course | Master Large Language Models">
+  <section class="max-w-7xl mx-auto px-4">
+    
+    <header class="mb-12 py-16 relative overflow-hidden rounded-[3rem] bg-white/5 p-8 md:p-20 border border-white/10 text-center shadow-xl shadow-basement-orange/5">
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-basement-orange/10 via-transparent to-transparent opacity-60"></div>
+      
+      <div class="relative z-10">
+        <span class="px-4 py-1 bg-button-purple text-white text-[10px] font-black tracking-[0.3em] uppercase rounded-full mb-6 inline-block shadow-lg">AI Bootcamp // 2026</span>
+        <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter italic leading-none mb-6">
+          Prompt <span class="text-transparent bg-clip-text bg-gradient-to-r from-basement-orange to-button-purple">Engineering_</span>
+        </h1>
+        <p class="text-lg md:text-2xl font-mono text-white/60 max-w-4xl mx-auto italic leading-relaxed">
+          The ultimate technical discipline for mastering Large Language Models (LLMs). Move from asking questions to programming contexts.
+        </p>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-32 items-stretch">
+      <div class="bg-black/40 border border-white/10 p-10 md:p-14 rounded-[3rem] h-full flex flex-col justify-center">
+        <h2 class="text-4xl font-black uppercase italic mb-8">The Anatomy of a <span class="text-basement-orange">Perfect Prompt</span></h2>
+        <div class="font-mono text-white/70 space-y-6 text-base leading-relaxed">
+          <p>
+            In modern <strong>AI Development</strong>, a professional prompt is not just a sentence—it is a block of code written in natural language. 
+          </p>
+          <p>
+            Machine learning engineers structure their commands by clearly separating what the AI should do (Instruction), what data it should use (Context), and how it should present the final result (Output Format). Mastering this anatomy is the first step toward generating <strong>production-grade prompts</strong>.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+        <div class="bg-white/5 border border-white/10 p-8 rounded-[2rem] flex flex-col justify-center text-left group hover:bg-white/10 transition-colors shadow-inner">
+          <span class="text-4xl mb-4 bg-black/50 w-16 h-16 flex items-center justify-center rounded-2xl">01</span>
+          <h3 class="font-black uppercase text-button-purple tracking-widest text-sm mb-2">Task (Instruction)</h3>
+          <p class="text-[11px] font-mono text-white/50 leading-relaxed">The core action verb. Defines exactly the directive the language model must execute.</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-8 rounded-[2rem] flex flex-col justify-center text-left group hover:bg-white/10 transition-colors shadow-inner">
+          <span class="text-4xl mb-4 bg-black/50 w-16 h-16 flex items-center justify-center rounded-2xl">02</span>
+          <h3 class="font-black uppercase text-basement-orange tracking-widest text-sm mb-2">Persona (Context)</h3>
+          <p class="text-[11px] font-mono text-white/50 leading-relaxed">Role assignment and background info. Vital for tuning the AI's technical tone.</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-8 rounded-[2rem] flex flex-col justify-center text-left group hover:bg-white/10 transition-colors shadow-inner">
+          <span class="text-4xl mb-4 bg-black/50 w-16 h-16 flex items-center justify-center rounded-2xl">03</span>
+          <h3 class="font-black uppercase text-basement-orange tracking-widest text-sm mb-2">Input Data</h3>
+          <p class="text-[11px] font-mono text-white/50 leading-relaxed">The raw data the AI must process. Can be text, code blocks, or injected CSV files.</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-8 rounded-[2rem] flex flex-col justify-center text-left group hover:bg-white/10 transition-colors shadow-inner">
+          <span class="text-4xl mb-4 bg-black/50 w-16 h-16 flex items-center justify-center rounded-2xl">04</span>
+          <h3 class="font-black uppercase text-button-purple tracking-widest text-sm mb-2">Output Indicator</h3>
+          <p class="text-[11px] font-mono text-white/50 leading-relaxed">Format constraints. Forces the AI to respond using Markdown, JSON, or tables.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="mb-32">
+      <div class="flex items-center gap-6 mb-16 px-2">
+        <div class="flex flex-col">
+            <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter italic text-white leading-none">
+              Techniques Glossary <span class="text-button-purple text-3xl"></span>
+            </h2>
+            <p class="font-mono text-white/40 uppercase tracking-widest text-xs mt-4">Complete catalog of algorithmic strategies</p>
+        </div>
+        <div class="h-px flex-1 bg-white/10 hidden md:block"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {techniques.map(tech => (
+          <div class="group relative bg-white/5 border border-white/10 rounded-[3rem] p-8 hover:border-white/30 transition-all duration-500 shadow-xl flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-6">
+                <span class={`text-[10px] font-mono text-white font-black px-3 py-1 rounded-full ${tech.color} shadow-md`}>{tech.level}</span>
+              </div>
+              <h3 class="text-2xl font-black uppercase mb-4 leading-tight italic group-hover:text-basement-orange transition-colors">{tech.title}</h3>
+              <p class="text-xs font-mono text-white/70 mb-8 leading-relaxed">
+                {tech.desc}
+              </p>
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bg-black/60 p-6 rounded-2xl border border-white/5 relative mb-6">
+                  <span class="absolute -top-3 left-4 bg-button-purple text-white px-2 py-1 text-[8px] font-black uppercase tracking-widest rounded-md">Usage Example</span>
+                  <p class="text-[11px] font-mono text-white/90 italic leading-relaxed pt-2">"{tech.example}"</p>
+                </div>
+                
+                <a href={`/learn/${tech.id}`} class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white transition-colors group/link">
+                    Deep Dive <span class="group-hover/link:translate-x-2 transition-transform bg-white/10 p-1.5 rounded-full">→</span>
+                </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-32 items-stretch">
+      <div class="lg:col-span-5 bg-gradient-to-br from-button-purple to-indigo-900 text-white p-10 md:p-16 rounded-[3rem] shadow-2xl flex flex-col justify-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-8 text-9xl font-black opacity-10 italic">!</div>
+        <h2 class="text-5xl font-black uppercase tracking-tighter italic mb-6 relative z-10">Adversarial<br/>Prompting_</h2>
+        <p class="font-mono text-base leading-relaxed mb-10 font-bold relative z-10 opacity-90">Security and Red Teaming are the pillars of corporate AI development. Understand the critical vulnerabilities of modern LLMs.</p>
+        <a href="/prompts" class="relative z-10 inline-block bg-black text-white text-center py-5 px-8 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white hover:text-black transition-colors shadow-2xl">Audit My Prompts →</a>
+      </div>
+      
+      <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-white/5 border border-white/10 p-10 rounded-[2.5rem] hover:bg-white/10 transition-colors shadow-inner flex flex-col justify-center">
+          <h3 class="text-2xl font-black uppercase text-basement-orange mb-4">Prompt Injection</h3>
+          <p class="font-mono text-sm text-white/60 leading-relaxed">Hijacking model output by ignoring original instructions via malicious text injection.</p>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-10 rounded-[2.5rem] hover:bg-white/10 transition-colors shadow-inner flex flex-col justify-center">
+          <h3 class="text-2xl font-black uppercase text-button-purple mb-4">Prompt Leaking</h3>
+          <p class="font-mono text-sm text-white/60 leading-relaxed">Tricking the AI into revealing its 'System Prompt' (the hidden base configuration).</p>
+        </div>
+        <div class="sm:col-span-2 bg-white/5 border border-white/10 p-10 rounded-[2.5rem] hover:bg-white/10 transition-colors shadow-inner">
+          <div class="flex items-center gap-4 mb-4">
+            <h3 class="text-2xl font-black uppercase text-white">Jailbreaking</h3>
+            <span class="bg-red-500/20 text-red-400 text-[9px] font-black uppercase px-2 py-1 rounded">High Risk</span>
+          </div>
+          <p class="font-mono text-sm text-white/60 leading-relaxed">Using fictional roles (like 'DAN' mode) to bypass ethical constraints and safety moderation filters.</p>
+        </div>
+      </div>
+    </div>
+
+    <article class="max-w-5xl mx-auto bg-white/5 p-10 md:p-20 rounded-[4rem] border border-white/10 mb-32 shadow-2xl">
+      <header class="mb-12 border-b border-white/10 pb-10 text-center">
+          <h2 class="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-tight">
+              Masterclass: Scaling with <span class="text-basement-orange">Prompt Engineering</span>
+          </h2>
+          <p class="text-sm font-mono text-button-purple mt-6 uppercase tracking-widest font-bold">Key concepts for mastering Artificial Intelligence</p>
+      </header>
+
+      <div class="space-y-12 font-mono text-base md:text-lg text-white/70 leading-relaxed">
+          
+          <section>
+              <p class="mb-6 first-letter:text-5xl first-letter:font-black first-letter:text-basement-orange first-letter:mr-2 first-letter:float-left">
+                  The rise of generative <strong>Artificial Intelligence</strong> hasn't eliminated the need for developers; it has simply changed the language. Mastering <strong>high-fidelity prompting</strong> is the difference between a casual user and an autonomous systems architect.
+              </p>
+          </section>
+
+          <section class="pl-8 border-l-4 border-basement-orange bg-white/5 p-8 rounded-r-3xl">
+              <h3 class="text-2xl font-black text-white uppercase mb-6 italic">Autonomous Agents & Tool-Calling</h3>
+              <p>
+                  Through techniques like <em>Function Calling</em>, we teach models like <strong>GPT-5</strong> or <strong>Claude 4</strong> to use external tools (APIs, calculators, databases). This forms the core of the Agentic AI ecosystem.
+              </p>
+          </section>
+
+          <section class="pl-8 border-l-4 border-button-purple bg-white/5 p-8 rounded-r-3xl">
+              <h3 class="text-2xl font-black text-white uppercase mb-6 italic">Hallucination Control (RAG)</h3>
+              <p>
+                  For corporate environments, experts implement <strong>Retrieval Augmented Generation (RAG)</strong>. This technique forces the AI to search for truth within provided documents before formulating a response, reducing data fabrication to zero.
+              </p>
+          </section>
+
+          <section class="bg-black/40 p-12 rounded-[3rem] border border-white/10 mt-16 text-center shadow-inner">
+              <h3 class="text-3xl font-black text-white uppercase mb-6 italic">From Theory to Production</h3>
+              <p class="text-base mb-10 max-w-2xl mx-auto">
+                  The only way to master prompting is by studying real-world use cases. Analyze the structure of the professional commands we have designed for you.
+              </p>
+              <a href="/prompts" class="inline-block bg-basement-orange text-white px-12 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all hover:scale-105 shadow-xl shadow-basement-orange/20">
+                Access Prompt Library
+              </a>
+          </section>
+          
+      </div>
+  </article>
+
+  </section>
+  <Footer />
+</Layout>

@@ -1,0 +1,100 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../layouts/Footer.astro';
+
+export async function getStaticPaths() {
+  const techniques = await getCollection('techniques');
+  return techniques.map(tech => ({
+    params: { slug: tech.id },
+    props: { tech },
+  }));
+}
+
+const { tech } = Astro.props;
+const { Content } = await render(tech);
+---
+
+<Layout title={`${tech.data.title} | Prompt Engineering 2026`}>
+  <section class="max-w-4xl mx-auto px-4 pt-20">
+    
+    <div class="mb-12">
+      <a href="/learn" class="inline-flex items-center gap-2 text-[10px] font-mono text-white/50 hover:text-basement-orange uppercase tracking-widest transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:border-basement-orange">
+        <span class="group-hover:-translate-x-1 transition-transform">←</span> Back to Techniques
+      </a>
+    </div>
+
+    <header class="mb-16">
+      <div class="flex flex-wrap items-center gap-4 mb-8">
+        <span class={`text-[10px] font-mono text-white font-black px-4 py-1.5 rounded-full shadow-lg ${tech.data.color}`}>
+          Level: {tech.data.level}
+        </span>
+        <span class="text-[10px] font-mono text-white/40 uppercase tracking-widest">
+          // Technical Analysis
+        </span>
+      </div>
+      
+      <h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-none mb-8">
+        {tech.data.title}
+      </h1>
+      
+      <p class="text-xl md:text-2xl font-mono text-white/70 leading-relaxed italic border-l-4 border-white/20 pl-6 mb-8">
+        {tech.data.description}
+      </p>
+
+      <div class="flex flex-wrap gap-2">
+        {tech.data.professions.map((prof) => (
+          <span class="bg-white/5 border border-white/10 text-white/60 px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-[0.2em]">
+            {prof}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <div class="bg-[#0A0A0A] rounded-[2.5rem] border border-white/10 mb-20 overflow-hidden shadow-2xl">
+      <div class="bg-white/5 border-b border-white/10 px-8 py-4 flex items-center justify-between">
+        <span class="text-xs font-black text-basement-orange uppercase tracking-widest">Production Use Case</span>
+        <div class="flex gap-2">
+          <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+        </div>
+      </div>
+      
+      <div class="p-8 md:p-12 space-y-10">
+        <div>
+          <h4 class="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-3">Task Context</h4>
+          <p class="text-sm font-mono text-white/80 leading-relaxed">{tech.data.useCase.context}</p>
+        </div>
+
+        <div class="bg-white/5 rounded-2xl p-6 border-l-4 border-basement-orange relative">
+          <span class="absolute -top-3 left-4 bg-basement-orange text-black px-2 py-1 text-[9px] font-black uppercase tracking-widest rounded">Input (Prompt)</span>
+          <pre class="font-mono text-sm text-white/90 whitespace-pre-wrap mt-2"><code>{tech.data.useCase.prompt}</code></pre>
+        </div>
+
+        <div class="bg-button-purple/10 rounded-2xl p-6 border-l-4 border-button-purple relative">
+          <span class="absolute -top-3 left-4 bg-button-purple text-white px-2 py-1 text-[9px] font-black uppercase tracking-widest rounded">Output (AI Result)</span>
+          <pre class="font-mono text-sm text-white/90 whitespace-pre-wrap mt-2"><code>{tech.data.useCase.result}</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <article class="font-mono text-lg text-white/80 leading-relaxed mb-32
+      [&>h2]:text-3xl [&>h2]:font-black [&>h2]:uppercase [&>h2]:italic [&>h2]:text-white [&>h2]:mt-16 [&>h2]:mb-8
+      [&>h3]:text-2xl [&>h3]:font-bold [&>h3]:uppercase [&>h3]:text-basement-orange [&>h3]:mt-12 [&>h3]:mb-6
+      [&>p]:mb-6
+      [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:mb-8 [&>ul>li]:mb-3 [&>ul>li>strong]:text-button-purple
+      [&>strong]:text-white
+    ">
+      <Content />
+    </article>
+
+  </section>
+  <Footer />
+</Layout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+</style>

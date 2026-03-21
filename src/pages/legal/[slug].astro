@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../layouts/Footer.astro';
+
+export async function getStaticPaths() {
+  const legalDocs = await getCollection('legal');
+  return legalDocs.map(doc => ({
+    params: { slug: doc.id },
+    props: { doc },
+  }));
+}
+
+const { doc } = Astro.props;
+const { Content } = await render(doc);
+---
+
+<Layout title={`${doc.data.title} | PROMPT LAB`}>
+  <section class="max-w-4xl mx-auto px-4 pt-32 pb-24">
+    <header class="mb-16 border-b border-white/10 pb-12">
+      <h1 class="text-5xl font-black uppercase italic mb-4 text-transparent bg-clip-text bg-gradient-to-r from-basement-orange to-button-purple">
+        {doc.data.title}
+      </h1>
+      <p class="font-mono text-[10px] text-white/30 uppercase tracking-[0.3em]">
+        Última actualización: {doc.data.lastUpdated}
+      </p>
+    </header>
+
+    <article class="prose prose-invert max-w-none font-mono text-white/70 
+      [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-white [&>h2]:mt-12 [&>h2]:mb-6 [&>h2]:uppercase
+      [&>p]:mb-6 [&>p]:leading-relaxed
+      [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:mb-6
+      [&>a]:text-basement-orange [&>a]:hover:underline
+    ">
+      <Content />
+    </article>
+  </section>
+  <Footer />
+</Layout>
