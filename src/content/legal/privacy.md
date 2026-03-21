@@ -5,7 +5,7 @@ lastUpdated: "March 21, 2026"
 
 ## 1. General Information
 
-At **PROMPT LAB**, accessible from [Your Website URL], one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by **PROMPT LAB** and how we use it.
+At **PROMPTWIK**, accessible from [Your Website URL], one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by **PROMPTWIK** and how we use it.
 
 By using our website, you hereby consent to our Privacy Policy and agree to its terms.
 
@@ -13,13 +13,13 @@ By using our website, you hereby consent to our Privacy Policy and agree to its 
 
 ## 2. Google AdSense and Third-Party Advertising
 
-**PROMPT LAB** partners with **Google AdSense** to serve advertisements. Google, as a third-party vendor, uses cookies to serve ads on our site. 
+**PROMPTWIK** partners with **Google AdSense** to serve advertisements. Google, as a third-party vendor, uses cookies to serve ads on our site. 
 
-* **The DART Cookie:** Google's use of the DART cookie enables it to serve ads to our visitors based upon their visit to **PROMPT LAB** and other sites on the internet.
+* **The DART Cookie:** Google's use of the DART cookie enables it to serve ads to our visitors based upon their visit to **PROMPTWIK** and other sites on the internet.
 * **Opt-out:** You may choose to decline the use of the DART cookie by visiting the [Google Ad and Content Network Privacy Policy](https://policies.google.com/technologies/ads).
 * **Personalized Advertising:** Users can manage their preferences or opt-out of personalized advertising entirely by visiting [Google Ads Settings](https://www.google.com/settings/ads).
 
-Please note that **PROMPT LAB** has no access to or control over these cookies that are used by third-party advertisers.
+Please note that **PROMPTWIK** has no access to or control over these cookies that are used by third-party advertisers.
 
 ---
 
