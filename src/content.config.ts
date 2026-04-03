@@ -31,11 +31,22 @@ const techniques = defineCollection({
 });
 
 const legal = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/legal" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/legal" }),
   schema: z.object({
     title: z.string(),
     lastUpdated: z.string(),
   }),
 });
 
-export const collections = { prompts, techniques, legal };
+const guides = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/guides" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    category: z.string(),
+    image: z.string(),
+  }),
+});
+
+export const collections = { prompts, techniques, legal, guides };

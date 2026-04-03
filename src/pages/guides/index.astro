@@ -1,0 +1,109 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const guides = await getCollection("guides");
+const sortedGuides = guides.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+---
+
+<Layout title="PROMPTWIK | Guides">
+  <section class="max-w-7xl mx-auto px-4">
+    <header
+      class="mb-12 py-12 relative overflow-hidden rounded-3xl bg-white/5 p-8 md:p-20 border border-white/5"
+    >
+      <div
+        class="absolute top-0 right-0 text-[140px] font-black text-white opacity-[0.12] select-none italic leading-none tracking-tighter -rotate-12 translate-x-10 -translate-y-10"
+      >
+        GUIDES_2026
+      </div>
+
+      <div class="flex items-center gap-4 mb-6 relative z-10">
+        <span
+          class="px-4 py-1 bg-basement-orange text-white text-[10px] font-bold tracking-[0.2em] uppercase rounded-full"
+          >Technical Articles</span
+        >
+        <span
+          class="text-[10px] font-mono text-white/40 uppercase tracking-widest"
+          >v.1.0.4 // Guides_Section</span
+        >
+      </div>
+
+      <h1
+        class="text-7xl md:text-[10rem] font-black uppercase tracking-tighter leading-[0.8] mb-10 relative z-10"
+      >
+        Engineering <br />
+        <span
+          class="text-transparent bg-clip-text bg-gradient-to-r from-basement-orange to-button-purple"
+        >
+          Guides_
+        </span>
+      </h1>
+
+      <p
+        class="text-xl md:text-3xl font-mono text-white/70 max-w-3xl leading-relaxed relative z-10 italic"
+      >
+        // Practical articles on <span
+          class="text-white border-b-2 border-basement-orange"
+          >advanced prompt engineering</span
+        > techniques and AI optimization strategies.
+      </p>
+    </header>
+
+    <div class="flex items-center gap-6 mb-12 px-2">
+      <h2
+        class="text-5xl font-black uppercase tracking-tighter italic text-white"
+      >
+        Latest_<span class="text-basement-orange text-3xl"></span>
+      </h2>
+      <div class="h-px flex-1 bg-white/10"></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+      {
+        sortedGuides.map((guide, index) => (
+          <a
+            href={`/guides/${guide.id}`}
+            class="group relative border border-white/10 p-10 hover:border-basement-orange transition-all bg-white/5 rounded-[2.5rem]"
+          >
+            <div class="flex justify-between items-start mb-10">
+              <span
+                class={`text-[10px] font-mono font-bold ${
+                  index % 2 === 0 ? "text-basement-orange" : "text-button-purple"
+                }`}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest">
+                {guide.data.category}
+              </span>
+            </div>
+            <h3 class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-basement-orange transition-colors italic">
+              {guide.data.title}
+            </h3>
+            <p class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed">
+              {guide.data.description}
+            </p>
+            <div class="flex items-center gap-4 mb-6">
+              <span class="text-[10px] font-mono text-white/40 uppercase">
+                {formatDate(guide.data.pubDate)}
+              </span>
+            </div>
+            <div class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block">
+              Read_Article →
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

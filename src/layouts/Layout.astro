@@ -3,10 +3,64 @@ import "../styles/global.css";
 
 interface Props {
   title: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: string;
+  schema?: "WebSite" | "Article" | "HowTo";
+  publishedTime?: string;
+  author?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "Master AI with precision-engineered prompts. The ultimate library for CoT, RAG, and advanced prompt engineering.",
+  image = "/promptwik-og.png",
+  canonicalURL = Astro.url.href,
+  schema = "WebSite",
+  publishedTime,
+  author = "PromptWik Team"
+} = Astro.props;
+
 const pathname = Astro.url.pathname;
+const siteUrl = Astro.site?.origin || "https://promptwik.com";
+
+const jsonLd = schema === "Article" ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "image": image.startsWith("http") ? image : `${siteUrl}${image}`,
+  "datePublished": publishedTime,
+  "author": {
+    "@type": "Person",
+    "name": author
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "PromptWik",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/promptwik.svg`
+    }
+  }
+} : schema === "HowTo" ? {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "headline": title,
+  "description": description,
+  "image": image.startsWith("http") ? image : `${siteUrl}${image}`
+} : {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "PromptWik",
+  "url": siteUrl,
+  "description": description,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${siteUrl}/prompts?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
+};
 ---
 
 <!doctype html>
@@ -19,7 +73,22 @@ const pathname = Astro.url.pathname;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/promptwik.svg" />
+    <link rel="canonical" href={canonicalURL} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content={schema === "Article" ? "article" : "website"} />
+    <meta property="og:image" content={image.startsWith("http") ? image : `${siteUrl}${image}`} />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image.startsWith("http") ? image : `${siteUrl}${image}`} />
+    
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body
     class="flex min-h-screen bg-[#18181B] text-white font-retro selection:bg-basement-orange selection:text-black overflow-x-hidden"
@@ -101,6 +170,12 @@ const pathname = Astro.url.pathname;
             ? "text-basement-orange"
             : "text-white/40"}>04 AI MODELS</a
         >
+        <a
+          href="/guides"
+          class={pathname.includes("/guides")
+            ? "text-basement-orange"
+            : "text-white/40"}>05 GUIDES</a
+        >
       </nav>
 
       <div class="mt-auto">
@@ -155,6 +230,12 @@ const pathname = Astro.url.pathname;
           class={`px-5 py-4 rounded-xl flex items-center gap-4 transition-all duration-300 hover:bg-white/5 hover:text-basement-orange border-l-2 ${pathname.includes("/models") ? "bg-white/5 border-basement-orange text-basement-orange shadow-inner" : "border-transparent text-white/50"}`}
         >
           <span class="text-[9px] opacity-40 font-mono">04</span> AI MODELS
+        </a>
+        <a
+          href="/guides"
+          class={`px-5 py-4 rounded-xl flex items-center gap-4 transition-all duration-300 hover:bg-white/5 hover:text-basement-orange border-l-2 ${pathname.includes("/guides") ? "bg-white/5 border-basement-orange text-basement-orange shadow-inner" : "border-transparent text-white/50"}`}
+        >
+          <span class="text-[9px] opacity-40 font-mono">05</span> GUIDES
         </a>
       </nav>
 

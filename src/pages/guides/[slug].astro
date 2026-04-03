@@ -1,0 +1,283 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides");
+  return guides.map((guide) => ({
+    params: { slug: guide.id },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+
+const allGuides = await getCollection("guides");
+const relatedGuides = allGuides
+  .filter((g) => g.id !== guide.id && g.data.category === guide.data.category)
+  .slice(0, 3);
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+const wordCount = guide.body?.split(/\s+/).length || 0;
+const readingTime = Math.ceil(wordCount / 200);
+---
+
+<Layout title={`PROMPTWIK | ${guide.data.title}`}>
+  <section class="max-w-7xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <article
+        class="lg:col-span-9 bg-white/5 p-8 md:p-20 rounded-[3rem] border border-white/5 shadow-2xl"
+      >
+        <header class="border-b border-white/10 pb-12 mb-12">
+          <div class="flex items-center gap-4 mb-6">
+            <span
+              class="px-4 py-1 bg-button-purple text-white text-[10px] font-bold tracking-[0.2em] uppercase rounded-full"
+            >
+              {guide.data.category}
+            </span>
+            <span
+              class="text-[11px] font-mono text-white/40 border border-white/10 px-3 py-1 rounded-full uppercase tracking-tighter"
+            >
+              {readingTime} min read
+            </span>
+          </div>
+
+          <h1
+            class="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-[0.9] mb-8"
+          >
+            {guide.data.title}
+          </h1>
+
+          <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-basement-orange to-button-purple flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <span class="text-[11px] font-mono text-white/60 uppercase">PromptWik Team</span>
+            </div>
+            <span class="text-[11px] font-mono text-white/40">{formatDate(guide.data.pubDate)}</span>
+          </div>
+        </header>
+
+        <div class="prose prose-invert prose-lg max-w-none">
+          <Content />
+        </div>
+      </article>
+
+      <aside class="lg:col-span-3 space-y-6">
+        <div
+          class="p-8 border border-white/10 bg-gradient-to-b from-white/5 to-transparent rounded-[2rem]"
+        >
+          <h3
+            class="text-xs font-black text-basement-orange uppercase tracking-[0.4em] mb-8"
+          >
+            Related_Guides
+          </h3>
+          <ul class="space-y-6 font-mono text-sm">
+            {
+              relatedGuides.length > 0 ? (
+                relatedGuides.map((relatedGuide, index) => (
+                  <li class="relative p-4 rounded-2xl hover:bg-white/5 transition-colors group cursor-pointer border-t border-white/5 pt-6 first:border-0 first:pt-0">
+                    <span class="text-[30px] font-black absolute -left-2 -top-4 opacity-10 italic">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <a href={`/guides/${relatedGuide.id}`} class="block relative z-10">
+                      <h4 class="font-bold uppercase group-hover:text-basement-orange transition-colors italic leading-tight">
+                        {relatedGuide.data.title}
+                      </h4>
+                      <p class="text-[10px] text-white/40 mt-1 uppercase italic">
+                        {relatedGuide.data.category}
+                      </p>
+                    </a>
+                  </li>
+                ))
+              ) : (
+                <li class="text-white/40 text-sm italic">No related guides available</li>
+              )
+            }
+          </ul>
+        </div>
+
+        <div
+          class="p-8 border border-white/10 bg-white/5 rounded-[2rem]"
+        >
+          <h3
+            class="text-xs font-black text-button-purple uppercase tracking-[0.4em] mb-6"
+          >
+            Categories
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 bg-basement-orange/20 text-basement-orange text-[10px] font-bold uppercase rounded-full">
+              Chain of Thought
+            </span>
+            <span class="px-3 py-1 bg-button-purple/20 text-button-purple text-[10px] font-bold uppercase rounded-full">
+              RAG
+            </span>
+            <span class="px-3 py-1 bg-white/10 text-white/60 text-[10px] font-bold uppercase rounded-full">
+              Agent Architecture
+            </span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  document.querySelectorAll('.copy-prompt-btn').forEach(button => {
+    const wrapper = button.closest('.code-block-wrapper');
+    const codeElement = wrapper?.querySelector('code');
+    
+    if (codeElement) {
+      button.setAttribute('data-code', codeElement.textContent || '');
+    }
+    
+    button.addEventListener('click', async () => {
+      const codeText = button.getAttribute('data-code') || '';
+      
+      try {
+        await navigator.clipboard.writeText(codeText);
+        
+        const iconEl = button.querySelector('.copy-icon');
+        const textEl = button.querySelector('.copy-text');
+        const originalIconHTML = iconEl.outerHTML;
+        const originalText = textEl.textContent;
+        
+        iconEl.outerHTML = '<svg class="copy-icon w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+        textEl.textContent = 'Copied';
+        button.classList.remove('bg-white/10', 'hover:bg-white/20', 'text-white/60');
+        button.classList.add('bg-emerald-500/20', 'text-emerald-400');
+        
+        setTimeout(() => {
+          button.querySelector('.copy-icon').outerHTML = originalIconHTML;
+          textEl.textContent = originalText;
+          button.classList.remove('bg-emerald-500/20', 'text-emerald-400');
+          button.classList.add('bg-white/10', 'hover:bg-white/20', 'text-white/60');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .prose h2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: #ff5500;
+  }
+  
+  .prose h3 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #a855f7;
+  }
+  
+  .prose p {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+  }
+  
+  .prose ul, .prose ol {
+    font-family: 'Space Mono', monospace;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+  
+  .prose li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .prose code:not(.prompt-code):not(pre code) {
+    background: rgba(255, 85, 0, 0.2);
+    color: #ff5500;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+  }
+  
+  .prose pre {
+    position: relative;
+    background: #0a0a0a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  
+  .prose pre code {
+    display: block;
+    padding: 1.5rem;
+    background: transparent;
+    color: #e5e5e5;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  
+  .prose pre::before {
+    content: "Prompt Template";
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .prose pre .copy-prompt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  
+  .prose pre .copy-prompt-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .code-block-wrapper {
+    position: relative;
+  }
+</style>
