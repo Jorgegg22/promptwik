@@ -5,6 +5,7 @@ model: "Gemini Pro"
 category: "Data Engineering"
 variables: ["COLUMN_NAMES", "DETECTED_DATA_ISSUES"]
 promptText: "Act as a Senior Data Engineer. I have a raw dataset within a Pandas DataFrame. The primary columns are [COLUMN_NAMES] and I have identified the following structural issues: [DETECTED_DATA_ISSUES]. \n\nWrite a robust Python (Pandas) script to:\n1. Perform intelligent imputation or removal of null values based on column distribution.\n2. Normalize string formats (lowercase, stripping accents, removing whitespace).\n3. Cast incorrect data types to their optimal numerical or categorical formats.\nReturn only the functional code block with concise inline documentation."
+featured: true
 ---
 
 ## Automating the "Janitor Work" of Data Science

@@ -10,6 +10,7 @@ const prompts = defineCollection({
     category: z.string(),
     variables: z.array(z.string()),
     promptText: z.string(),
+    featured: z.boolean().optional().default(false),
   }),
 });
 

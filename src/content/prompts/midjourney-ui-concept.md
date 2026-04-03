@@ -2,9 +2,10 @@
 title: "High-Fidelity UI/UX Concept Generator"
 description: "Engineers precision Midjourney v6 prompts to produce industry-standard mockups and design system inspiration."
 model: "Midjourney v6.0"
-category: "Visual Design & Prototyping"
+category: "Visual Design"
 variables: ["APPLICATION_TYPE", "COLOR_PALETTE", "STYLISTIC_THEME"]
 promptText: "/imagine prompt: High-end UI/UX design of a [APPLICATION_TYPE], clean layout, modern typography, Dribbble aesthetic, Behance featured. Color palette: [COLOR_PALETTE]. Theme: [STYLISTIC_THEME], glassmorphism components, soft depth shadows, high-fidelity vector UI elements, 8k resolution, photorealistic screen illumination --ar 16:9 --v 6.0 --style raw"
+featured: true
 ---
 
 ## Instant Inspiration for Product Designers

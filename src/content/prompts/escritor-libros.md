@@ -5,6 +5,7 @@ model: "Gemini Pro"
 category: "Narrative Engineering"
 variables: ["BOOK_TOPIC", "CHAPTER_NUMBER", "WORD_COUNT"]
 promptText: "The primary topic/theme of my book is: [BOOK_TOPIC]. Your response must be in English. Write Chapter [CHAPTER_NUMBER] featuring highly detailed, engaging prose with a strict length constraint of over [WORD_COUNT] words. Incorporate practical examples, vivid descriptions, and maintain a tone specifically tailored for enthusiasts of this genre. Do not provide a summary; fully develop the narrative arc and descriptive depth."
+featured: true
 ---
 
 ## Bypassing the Context Window Limit

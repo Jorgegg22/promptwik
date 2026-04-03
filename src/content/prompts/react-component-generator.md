@@ -5,6 +5,7 @@ model: "Claude 4"
 category: "Frontend Engineering"
 variables: ["COMPONENT_NAME", "FUNCTIONALITY", "VISUAL_STYLE"]
 promptText: "Act as a Senior Frontend Engineer. Create a production-grade React component named [COMPONENT_NAME] that implements the following functionality: [FUNCTIONALITY]. \n\nTechnical Requirements:\n1. Use TypeScript with strict interfaces and exhaustive prop-typing.\n2. Style using Tailwind CSS following this specific visual direction: [VISUAL_STYLE].\n3. Ensure 100% accessibility compliance (A11y, ARIA roles, semantic HTML, and focus management).\n4. Return the complete source code in a single, copy-paste ready block. Minimize non-essential commentary."
+featured: true
 ---
 
 ## High-Velocity UI Development

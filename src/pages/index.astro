@@ -1,6 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Footer from "../layouts/Footer.astro";
+import { getCollection } from "astro:content";
+
+const allPrompts = await getCollection("prompts");
+const featuredPrompts = allPrompts
+  .filter(p => p.data.featured)
+  .slice(0, 5);
 ---
 
 <Layout 
@@ -351,155 +357,41 @@ import Footer from "../layouts/Footer.astro";
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-        <a
-          href="/prompts/react-component-generator"
-          class="group relative border border-white/10 p-10 hover:border-button-purple transition-all bg-white/5 rounded-[2.5rem]"
-        >
-          <div class="flex justify-between items-start mb-10">
-            <span class="text-[10px] font-mono text-button-purple font-bold"
-              >TOP_01</span
+        {featuredPrompts.map((prompt, index) => {
+          const isEven = index % 2 === 0;
+          const hoverBorder = isEven ? 'hover:border-button-purple' : 'hover:border-basement-orange';
+          const badgeColor = isEven ? 'text-button-purple' : 'text-basement-orange';
+          return (
+          <a
+            href={`/prompts/${prompt.id}`}
+            class={`group relative border border-white/10 p-10 ${hoverBorder} transition-all bg-white/5 rounded-[2.5rem]`}
+          >
+            <div class="flex justify-between items-start mb-10">
+              <span class={`text-[10px] font-mono font-bold ${badgeColor}`}>
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span
+                class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest"
+              >{prompt.data.category}</span>
+            </div>
+            <h3
+              class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-basement-orange transition-colors italic"
             >
-            <span
-              class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest"
-              >MOST_WANTED</span
+              {prompt.data.title.split(' ').slice(0, 2).join(' ')}<br />{prompt.data.title.split(' ').slice(2).join(' ')}
+            </h3>
+            <p
+              class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed"
             >
-          </div>
-          <h3
-            class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-button-purple transition-colors italic"
-          >
-            Enterprise React<br />Component Creator
-          </h3>
-          <p
-            class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed"
-          >
-            Strictly typed UI building blocks with Tailwind CSS.
-          </p>
-          <div
-            class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block"
-          >
-            Get_Access →
-          </div>
-        </a>
-
-        <a
-          href="/prompts/sql-query-optimizer"
-          class="group relative border border-white/10 p-10 hover:border-basement-orange transition-all bg-white/5 rounded-[2.5rem]"
-        >
-          <div class="flex justify-between items-start mb-10">
-            <span class="text-[10px] font-mono text-basement-orange font-bold"
-              >TOP_02</span
+              {prompt.data.description.split('.').slice(0, 1)}.
+            </p>
+            <div
+              class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block"
             >
-            <span
-              class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest"
-              >PERFORMANCE</span
-            >
-          </div>
-          <h3
-            class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-basement-orange transition-colors italic"
-          >
-            High-Latency<br />SQL Optimizer
-          </h3>
-          <p
-            class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed"
-          >
-            SARGable query refactoring and indexing strategies.
-          </p>
-          <div
-            class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block"
-          >
-            Get_Access →
-          </div>
-        </a>
-
-        <a
-          href="/prompts/midjourney-ui-concept"
-          class="group relative border border-white/10 p-10 hover:border-button-purple transition-all bg-white/5 rounded-[2.5rem]"
-        >
-          <div class="flex justify-between items-start mb-10">
-            <span class="text-[10px] font-mono text-button-purple font-bold"
-              >TOP_03</span
-            >
-            <span
-              class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest"
-              >VISUAL_AI</span
-            >
-          </div>
-          <h3
-            class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-button-purple transition-colors italic"
-          >
-            High-Fidelity<br />UI/UX Visualizer
-          </h3>
-          <p
-            class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed"
-          >
-            Precision Midjourney v6 tokens for product design.
-          </p>
-          <div
-            class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block"
-          >
-            Get_Access →
-          </div>
-        </a>
-
-        <a
-          href="/prompts/python-data-cleaner"
-          class="group relative border border-white/10 p-10 hover:border-basement-orange transition-all bg-white/5 rounded-[2.5rem]"
-        >
-          <div class="flex justify-between items-start mb-10">
-            <span class="text-[10px] font-mono text-basement-orange font-bold"
-              >TOP_04</span
-            >
-            <span
-              class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest"
-              >DATA_PIPELINE</span
-            >
-          </div>
-          <h3
-            class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-basement-orange transition-colors italic"
-          >
-            Automated Data<br />Sanitization
-          </h3>
-          <p
-            class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed"
-          >
-            Pandas ETL scripts for cleaning dirty datasets.
-          </p>
-          <div
-            class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block"
-          >
-            Get_Access →
-          </div>
-        </a>
-
-        <a
-          href="/prompts/escritor-libros"
-          class="group relative border border-white/10 p-10 hover:border-button-purple transition-all bg-white/5 rounded-[2.5rem]"
-        >
-          <div class="flex justify-between items-start mb-10">
-            <span class="text-[10px] font-mono text-button-purple font-bold"
-              >TOP_05</span
-            >
-            <span
-              class="text-white/20 font-mono text-[9px] group-hover:text-white transition-colors font-bold uppercase italic tracking-widest"
-              >CREATIVE</span
-            >
-          </div>
-          <h3
-            class="text-2xl font-black uppercase mb-3 leading-none group-hover:text-button-purple transition-colors italic"
-          >
-            Long-Form<br />Chapter Architect
-          </h3>
-          <p
-            class="text-[11px] font-mono text-white/40 uppercase mb-8 leading-relaxed"
-          >
-            Narrative engineering for self-published authors.
-          </p>
-          <div
-            class="text-[10px] font-bold tracking-widest uppercase group-hover:translate-x-2 transition-transform inline-block"
-          >
-            Get_Access →
-          </div>
-        </a>
+              Get_Access →
+            </div>
+          </a>
+          );
+        })}
       </div>
     </section>
   </section>

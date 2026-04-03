@@ -5,6 +5,7 @@ model: "GPT-5"
 category: "Database Engineering"
 variables: ["SLOW_QUERY", "DB_ENGINE"]
 promptText: "Act as a Senior Database Administrator (DBA) specialized in [DB_ENGINE]. I am optimizing a high-latency SQL query that is causing performance degradation. \n\nAnalyze the provided SQL, identify the specific bottleneck (e.g., full table scans, suboptimal joins, or high cardinality), and provide: \n1. A technical diagnosis of the execution plan.\n2. Strategic indexing recommendations for the underlying tables.\n3. The refactored, SARGable query following modern performance standards.\n\nTarget Query:\n[SLOW_QUERY]"
+featured: true
 ---
 
 ## Slash Your Database Latency
